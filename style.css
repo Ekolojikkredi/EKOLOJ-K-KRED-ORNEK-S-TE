@@ -7,7 +7,7 @@ body {
 
 .container {
     display: flex;
-    height: 50vh;
+    height: 80vh;
 }
 
 .left, .right {
