@@ -4,6 +4,7 @@ body {
     padding: 0;
     display: flex;
     height: 100vh;
+    background-color: #f0f4c3; /* Doğayı çağrıştıran bir renk */
 }
 .container {
     display: flex;
@@ -11,7 +12,7 @@ body {
 }
 .left {
     width: 25%;
-    background-color: #f4f4f4;
+    background-color: #a5d6a7; /* Doğayı çağrıştıran bir renk */
     padding: 20px;
 }
 .right {
@@ -23,9 +24,13 @@ body {
     margin-bottom: 20px;
 }
 .logo img {
-    width: 100px;
+    width: 50px;
+    display: inline-block;
+    vertical-align: middle;
 }
 .logo h1 {
+    display: inline-block;
+    vertical-align: middle;
     margin: 0;
     font-size: 24px;
 }
@@ -38,11 +43,11 @@ body {
     color: #333;
     padding: 10px;
     margin: 5px 0;
-    background-color: #ddd;
+    background-color: #66bb6a; /* Doğayı çağrıştıran bir renk */
     border-radius: 4px;
 }
 .side-menu a:hover {
-    background-color: #ccc;
+    background-color: #4caf50; /* Doğayı çağrıştıran bir renk */
 }
 .section {
     display: none;
@@ -63,9 +68,9 @@ body {
 .oval-btn:hover {
     background-color: #45a049;
 }
-.left-info {
-    margin-top: 20px;
-}
 .left-info p {
     margin: 5px 0;
+}
+#loginForm {
+    margin-top: 10px;
 }
