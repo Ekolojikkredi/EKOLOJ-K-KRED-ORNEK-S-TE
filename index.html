@@ -18,14 +18,14 @@
                 <a href="#nedir" onclick="showSection('nedir')">Ekolojik Kredi Nedir?</a>
                 <a href="#geriDonusumNedir" onclick="showSection('geriDonusumNedir')">Geri Dönüşüm Nedir?</a>
                 <a href="#hazirlayanlar" onclick="showSection('hazirlayanlar')">Hazırlayanlar</a>
-                <a href="#ekolojikKrediSayaci" onclick="showSection('ekolojikKrediSayaci')">Toplam Atık Kilosu</a>
+                <a href="#ekolojikKrediSayaci" onclick="showSection('ekolojikKrediSayaci')">Toplam Atık Sayacı</a>
                 <a href="#bizeUlasin" onclick="showSection('bizeUlasin')">Bize Ulaşın</a>
             </div>
         </div>
         <div class="right">
             <div id="nedir" class="section">
                 <h2>Ekolojik Kredi Nedir?</h2>
-                <p>Ekolojik Kredi Projesi, çevre bilincini artırmak ve okullarda geri dönüşüm kültürünü geliştirmek amacıyla oluşturulmuştur.</p>
+                <p>Ekolojik Kredi Projesi, çevre bilincini artırmak ve okullarda geri dönüşüm kültürünü geliştirmek amacıyla oluşturulmuştur. Öğrenciler, atıkları türlerine göre ayrıştırarak puan toplar ve ödüller kazanır. Proje, Türkiye'nin sıfır atık hedeflerine ve doğal kaynakların korunmasına katkı sağlamayı amaçlar.</p>
             </div>
             <div id="geriDonusumNedir" class="section">
                 <h2>Geri Dönüşüm Nedir?</h2>
@@ -34,11 +34,11 @@
             <div id="hazirlayanlar" class="section">
                 <h2>Hazırlayanlar</h2>
                 <p>Danışman: Osman Onuk</p>
-                <p>Öğrenciler: Muhammedcan Arslanparçası, Yağız Efe Yılmaz, Bilal Yiğit Tezcan</p>
+                <p>Öğrenciler: Muhammedcan Arslanparçası, Bilal Yiğit Tezcan, Yağız Efe Yılmaz</p>
             </div>
             <div id="ekolojikKrediSayaci" class="section">
-                <h2>Toplam Atık Kilosu</h2>
-                <p>Toplam Ekolojik Puan: <span id="toplamPuan">0</span></p>
+                <h2>Toplam Atık Sayacı</h2>
+                <p>Toplam Ekolojik Kredi: <span id="toplamKredi">0</span></p>
                 <p>Toplam Atık Miktarı: <span id="toplamAtik">0 kg</span></p>
             </div>
             <div id="bizeUlasin" class="section">
@@ -46,45 +46,58 @@
                 <p>Adres: İZMİR/TORBALI ANADOLU LİSESİ</p>
                 <p>Email: ekolojikkreditubitak@gmail.com</p>
             </div>
-            <button class="oval-btn" onclick="showSection('veriGoruntuleme')">Veri Görme</button>
             <button class="oval-btn" onclick="showSection('kayit')">Kayıt Ol</button>
-            <button class="oval-btn" onclick="showSection('veriGirisi')">Veri Girişi</button>
-            <div id="veriGoruntuleme" class="section">
-                <h2>Veri Görme</h2>
-                <form id="veriGoruntulemeForm">
-                    <input type="email" name="email" placeholder="Email" required>
-                    <input type="password" name="sifre" placeholder="Şifre" required>
-                    <button type="button" onclick="goruntule()">Verileri Gör</button>
-                </form>
-                <div class="left-info" style="display: none;">
-                    <p>İsim: <span id="veriGoruntulemeIsim"></span></p>
-                    <p>Ekolojik Puan: <span id="veriGoruntulemePuan"></span></p>
-                    <p>Toplam Atık Miktarı: <span id="veriGoruntulemeAtik"></span></p>
-                </div>
-            </div>
+            <button class="oval-btn" onclick="showSection('bilgilendirme')">Bilgilendirme</button>
+            <button class="oval-btn" onclick="showSection('veriGirisi')">Veri Giriş</button>
             <div id="kayit" class="section">
                 <h2>Kayıt Ol</h2>
                 <form id="kayitForm">
                     <input type="text" name="isim" placeholder="İsim" required>
                     <input type="email" name="email" placeholder="Email" required>
                     <input type="text" name="okul" placeholder="Okul" required>
-                    <input type="text" name="okul_numarasi" placeholder="Okul No" required>
+                    <input type="text" name="okul_num" placeholder="Okul No" required>
+                    <input type="text" name="il" placeholder="İl" required>
+                    <input type="text" name="ilce" placeholder="İlçe" required>
                     <input type="password" name="sifre" placeholder="Şifre" required>
                     <button type="button" onclick="kayitOl()">Kayıt Ol</button>
                 </form>
+                <button type="button" onclick="toggleLogin()">Hesabım Var</button>
+                <div id="loginForm" style="display:none;">
+                    <form id="veriGoruntulemeForm">
+                        <input type="email" name="email" placeholder="Email" required>
+                        <input type="password" name="sifre" placeholder="Şifre" required>
+                        <button type="button" onclick="goruntule()">Verileri Gör</button>
+                    </form>
+                </div>
+            </div>
+            <div id="bilgilendirme" class="section">
+                <h2>Bilgilendirme</h2>
+                <p>İsim: <span id="bilgilendirmeIsim"></span></p>
+                <p>Geçmiş Sıralamalar:</p>
+                <ul id="gecmisSiralama"></ul>
             </div>
             <div id="veriGirisi" class="section">
                 <h2>Veri Girişi</h2>
                 <form id="veriGirisiForm">
-                    <input type="text" name="ogrenci_id" placeholder="Öğrenci ID" required>
+                    <input type="text" name="ogr_id" placeholder="Öğrenci ID" required>
                     <input type="text" name="atik_turu" placeholder="Atık Türü" required>
-                    <input type="number" name="atik_kutlesi" placeholder="Atık Kütlesi (kg)" required>
-                    <select name="turune_ayrildi" required>
+                    <input type="number" name="atik_kg" placeholder="Atık Kütlesi (kg)" required>
+                    <select name="turu_ayrildi" required>
                         <option value="hayir">Hayır</option>
                         <option value="evet">Evet</option>
                     </select>
                     <button type="button" onclick="veriGirisi()">Veri Gir</button>
                 </form>
+                <div id="puanHesaplama">
+                    <h3>Puan Hesaplama</h3>
+                    <p>Ekolojik Kredi: <span id="hesaplananKredi">0</span></p>
+                </div>
+            </div>
+            <div id="veriSonuclari" class="section" style="display:none;">
+                <h2>Veri Sonuçları</h2>
+                <p>İsim: <span id="veriGoruntulemeIsim"></span></p>
+                <p>Ekolojik Kredi: <span id="veriGoruntulemeKredi"></span></p>
+                <p>Toplam Atık Miktarı: <span id="veriGoruntulemeAtik"></span></p>
             </div>
         </div>
     </div>
