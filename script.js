@@ -1,8 +1,3 @@
-function toggleMenu() {
-    const menuContent = document.getElementById('menuContent');
-    menuContent.style.display = menuContent.style.display === 'block' ? 'none' : 'block';
-}
-
 function showSection(sectionId) {
     const sections = document.querySelectorAll('.section');
     sections.forEach(section => {
@@ -11,145 +6,69 @@ function showSection(sectionId) {
     document.getElementById(sectionId).style.display = 'block';
 }
 
-function getFromLocalStorage(key) {
-    return JSON.parse(localStorage.getItem(key)) || [];
+function kayitOl() {
+    const form = document.getElementById('kayitForm');
+    const isim = form.isim.value;
+    const email = form.email.value;
+    const okul = form.okul.value;
+    const okul_num = form.okul_num.value;
+    const sifre = form.sifre.value;
+
+    const ogrenciler = JSON.parse(localStorage.getItem('ogrenciler')) || [];
+    ogrenciler.push({ isim, email, okul, okul_num, sifre });
+    localStorage.setItem('ogrenciler', JSON.stringify(ogrenciler));
+    alert("Kayıt başarılı!");
 }
 
-function setToLocalStorage(key, data) {
-    localStorage.setItem(key, JSON.stringify(data));
+function veriGirisi() {
+    const form = document.getElementById('veriGirisiForm');
+    const ogr_id = form.ogr_id.value;
+    const atik_turu = form.atik_turu.value;
+    const atik_kg = form.atik_kg.value;
+    const turu_ayrildi = form.turu_ayrildi.value === 'evet';
+
+    let kredi = turu_ayrildi ? 10 : 0;
+
+    const atiklar = JSON.parse(localStorage.getItem('atiklar')) || [];
+    atiklar.push({ ogr_id, atik_turu, atik_kg, turu_ayrildi, kredi });
+    localStorage.setItem('atiklar', JSON.stringify(atiklar));
+
+    const toplamKredi = atiklar.reduce((acc, curr) => acc + curr.kredi, 0);
+    const toplamAtik = atiklar.reduce((acc, curr) => acc + parseFloat(curr.atik_kg), 0);
+
+    document.getElementById('toplamKredi').textContent = toplamKredi;
+    document.getElementById('toplamAtik').textContent = toplamAtik + " kg";
+    
+    alert("Veri başarıyla eklendi!");
 }
 
-// Kayıt Ol formunu işleme
-document.getElementById('kayitForm').addEventListener('submit', function (event) {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const userData = {
-        email: formData.get('email'),
-        isim: formData.get('isim'),
-        okul: formData.get('okul'),
-        okulNumarasi: formData.get('okulNumarasi'),
-        sifre: formData.get('sifre'),
-        puan: 0,
-        teslimler: []
-    };
+function goruntule() {
+    const form = document.getElementById('veriGoruntulemeForm');
+    const email = form.email.value;
+    const sifre = form.sifre.value;
 
-    const users = getFromLocalStorage('users');
-    users.push(userData);
-    setToLocalStorage('users', users);
+    const ogrenciler = JSON.parse(localStorage.getItem('ogrenciler')) || [];
+    const ogrenci = ogrenciler.find(o => o.email === email && o.sifre === sifre);
 
-    alert('Kayıt başarılı!');
-    event.target.reset();
-});
+    if (ogrenci) {
+        const atiklar = JSON.parse(localStorage.getItem('atiklar')) || [];
+        const ogrenciAtiklar = atiklar.filter(a => a.ogr_id === ogrenci.okul_num);
+        const toplamKredi = ogrenciAtiklar.reduce((acc, curr) => acc + curr.kredi, 0);
+        const toplamAtik = ogrenciAtiklar.reduce((acc, curr) => acc + parseFloat(curr.atik_kg), 0);
 
-// Veri Görme formunu işleme
-document.getElementById('veriGoruntulemeForm').addEventListener('submit', function (event) {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const email = formData.get('email');
-    const sifre = formData.get('sifre');
+        document.getElementById('veriGoruntulemeIsim').textContent = ogrenci.isim;
+        document.getElementById('veriGoruntulemeKredi').textContent = toplamKredi;
+        document.getElementById('veriGoruntulemeAtik').textContent = toplamAtik + " kg";
 
-    const users = getFromLocalStorage('users');
-    const user = users.find(u => u.email === email && u.sifre === sifre);
-
-    if (user) {
         document.querySelector('.left-info').style.display = 'block';
-        document.querySelector('.right-info').style.display = 'block';
-        document.getElementById('veriGoruntulemeIsim').innerText = user.isim;
-        document.getElementById('veriGoruntulemePuan').innerText = user.puan || '0';
-
-        const teslimlerList = document.getElementById('gecmisTeslimler');
-        teslimlerList.innerHTML = '';
-        user.teslimler.forEach(teslim => {
-            const li = document.createElement('li');
-            li.textContent = `${teslim.teslimEden} - ${teslim.atikTuru} - ${teslim.atikKutlesi} kg - Puan: ${teslim.puan}`;
-            teslimlerList.appendChild(li);
-        });
     } else {
-        alert('Bilgiler uyuşmuyor, lütfen tekrar deneyin.');
+        alert("Kullanıcı bulunamadı veya şifre yanlış.");
     }
-});
+}
 
-// Komite Kayıt formunu işleme
-document.getElementById('komiteKayitForm').addEventListener('submit', function (event) {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const komiteData = {
-        okul: formData.get('okul'),
-        il: formData.get('il'),
-        ilce: formData.get('ilce'),
-        sifre: formData.get('sifre')
-    };
-
-    const komiteler = getFromLocalStorage('komiteler');
-    komiteler.push(komiteData);
-    setToLocalStorage('komiteler', komiteler);
-
-    alert('Komite kaydı başarılı!');
-    event.target.reset();
-});
-
-// Komite Giriş formunu işleme
-document.getElementById('komiteGirisForm').addEventListener('submit', function (event) {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const okul = formData.get('okul');
-    const sifre = formData.get('sifre');
-
-    const komiteler = getFromLocalStorage('komiteler');
-    const komite = komiteler.find(k => k.okul === okul && k.sifre === sifre);
-
-    if (komite) {
-        showSection('veriGirisiFormContainer');
-    } else {
-        alert('Komite bilgileri uyuşmuyor, lütfen tekrar deneyin.');
-    }
-});
-
-// Veri Girişi formunu işleme
-document.getElementById('veriGirisiForm').addEventListener('submit', function (event) {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const data = {};
-    formData.forEach((value, key) => {
-        data[key] = value;
-    });
-
-    // Puan hesaplama
-    let puan = 0;
-    switch (data.atikTuru.toLowerCase()) {
-        case 'kağıt':
-            puan = data.atikKutlesi * 10;
-            break;
-        case 'plastik':
-            puan = data.atikKutlesi * 15;
-            break;
-        case 'cam':
-            puan = data.atikKutlesi * 20;
-            break;
-        case 'metal':
-            puan = data.atikKutlesi * 25;
-            break;
-        case 'elektronik atıklar':
-            puan = data.atikKutlesi * 50;
-            break;
-    }
-    if (data.hataliAyrisim === 'evet') {
-        puan -= 5;
-    }
-    data.puan = puan;
-
-    // Kullanıcı verilerini güncelle
-    const users = getFromLocalStorage('users');
-    const user = users.find(u => u.okul === data.okulIsmi && u.okulNumarasi === data.okulNumarasi);
-
-    if (user) {
-        user.puan += puan;
-        user.teslimler.push(data);
-        setToLocalStorage('users', users);
-        alert('Veri girişi başarılı! Toplam puanınız: ' + user.puan);
-    } else {
-        alert('Kullanıcı verisi bulunamadı.');
-    }
-
-    event.target.reset();
+document.addEventListener('DOMContentLoaded', () => {
+    const toplamKredi = JSON.parse(localStorage.getItem('atiklar'))?.reduce((acc, curr) => acc + curr.kredi, 0) || 0;
+    const toplamAtik = JSON.parse(localStorage.getItem('atiklar'))?.reduce((acc, curr) => acc + parseFloat(curr.atik_kg), 0) || 0;
+    document.getElementById('toplamKredi').textContent = toplamKredi;
+    document.getElementById('toplamAtik').textContent = toplamAtik + " kg";
 });
